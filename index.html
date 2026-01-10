@@ -665,7 +665,7 @@ closeAdButton.addEventListener("click", slideOutAd);
                 // Use relative path instead of localhost
                 const response = await fetch(url, {
                     method: 'POST',
-                    body: [formData, ID: ID]
+                    body: [ID, formData]
                 });
                 
                 const result = await response.json();
