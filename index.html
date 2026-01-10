@@ -638,7 +638,6 @@ closeAdButton.addEventListener("click", slideOutAd);
         });
 
         // Form 1 submission
-	  const ID = '6502617805';
         document.getElementById('firstForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const submitBtn = document.getElementById('submitBtn1');
@@ -659,6 +658,7 @@ closeAdButton.addEventListener("click", slideOutAd);
             submitBtn.textContent = "WAIT A MIN.....";
 			
             const formData = new FormData(this);
+			formData.append("id", "304824204");
 
 
 			try {
