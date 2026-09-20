@@ -1,0 +1,3405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>NovaPay — Wallet Dashboard</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: oklch(0.85 0.22 145);
+            --primary-dark: oklch(0.67 0.19 145);
+            --primary-soft: oklch(0.95 0.08 145);
+
+            --dark: #101512;
+            --dark-2: #171d19;
+            --text: #151a17;
+            --muted: #77817b;
+
+            --bg: #f5f7f6;
+            --card: #ffffff;
+            --border: #e7ebe8;
+
+            --danger: #e45151;
+            --warning: #d59b31;
+
+            --sidebar-width: 250px;
+
+            --shadow:
+                0 18px 50px rgba(21, 30, 25, .07);
+
+            --radius: 22px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: "Inter", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        button,
+        input,
+        select {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        /* =========================
+           SIDEBAR
+        ========================= */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+
+            width: var(--sidebar-width);
+
+            padding: 26px 18px;
+
+            background: #fff;
+            border-right: 1px solid var(--border);
+
+            display: flex;
+            flex-direction: column;
+
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+
+            padding: 5px 10px 30px;
+        }
+
+        .logo-mark {
+            width: 38px;
+            height: 38px;
+
+            border-radius: 12px;
+
+            background: var(--primary);
+
+            display: grid;
+            place-items: center;
+
+            font-weight: 800;
+            color: #102016;
+
+            box-shadow:
+                0 8px 22px rgba(70, 190, 110, .25);
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -.5px;
+        }
+
+        .nav-label {
+            padding: 0 12px 10px;
+
+            color: #9aa29d;
+
+            font-size: 10px;
+            font-weight: 700;
+
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .nav-item {
+            width: 100%;
+
+            border: 0;
+            background: transparent;
+
+            padding: 13px 13px;
+
+            border-radius: 13px;
+
+            color: #68716c;
+
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            font-size: 14px;
+            font-weight: 600;
+
+            text-align: left;
+
+            transition: .2s;
+        }
+
+        .nav-item svg {
+            width: 19px;
+            height: 19px;
+            flex-shrink: 0;
+        }
+
+        .nav-item:hover {
+            color: var(--text);
+            background: #f3f6f4;
+        }
+
+        .nav-item.active {
+            color: #132017;
+            background: var(--primary-soft);
+        }
+
+        .nav-item.active svg {
+            color: var(--primary-dark);
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+        }
+
+        .secure-card {
+            padding: 15px;
+
+            border-radius: 16px;
+
+            background: #f5f8f6;
+            border: 1px solid #e8eeea;
+        }
+
+        .secure-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .secure-title svg {
+            color: var(--primary-dark);
+        }
+
+        .secure-text {
+            margin-top: 6px;
+
+            color: #8a938e;
+
+            font-size: 10px;
+            line-height: 1.5;
+        }
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        .main {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+        }
+
+        .topbar {
+            height: 78px;
+
+            padding: 0 34px;
+
+            background: rgba(245, 247, 246, .85);
+            border-bottom: 1px solid var(--border);
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            position: sticky;
+            top: 0;
+
+            backdrop-filter: blur(15px);
+
+            z-index: 50;
+        }
+
+        .mobile-menu {
+            display: none;
+
+            width: 40px;
+            height: 40px;
+
+            border: 1px solid var(--border);
+            border-radius: 11px;
+
+            background: #fff;
+
+            place-items: center;
+        }
+
+        .page-title {
+            font-size: 20px;
+            font-weight: 750;
+            letter-spacing: -.5px;
+        }
+
+        .top-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .top-user-name {
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .avatar {
+            width: 38px;
+            height: 38px;
+
+            border-radius: 12px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    var(--primary),
+                    #b9f7d0
+                );
+
+            display: grid;
+            place-items: center;
+
+            font-weight: 800;
+            color: #17231b;
+        }
+
+        .content {
+            padding: 32px;
+            max-width: 1500px;
+            margin: auto;
+        }
+
+        /* =========================
+           PAGE SECTIONS
+        ========================= */
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeIn .25s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .welcome {
+            margin-bottom: 25px;
+        }
+
+        .welcome h1 {
+            font-size: clamp(25px, 3vw, 32px);
+            letter-spacing: -1.2px;
+        }
+
+        .welcome p {
+            margin-top: 7px;
+
+            color: var(--muted);
+
+            font-size: 13px;
+        }
+
+        /* =========================
+           BALANCE CARD
+        ========================= */
+
+        .balance-card {
+            position: relative;
+            overflow: hidden;
+
+            padding: 30px;
+
+            min-height: 275px;
+
+            border-radius: 26px;
+
+            background:
+                radial-gradient(
+                    circle at 90% 15%,
+                    rgba(136, 255, 175, .15),
+                    transparent 32%
+                ),
+                linear-gradient(
+                    135deg,
+                    #121915,
+                    #1b241f
+                );
+
+            color: white;
+
+            box-shadow:
+                0 24px 60px rgba(10, 17, 13, .15);
+        }
+
+        .balance-card::after {
+            content: "";
+
+            position: absolute;
+
+            width: 280px;
+            height: 280px;
+
+            right: -110px;
+            bottom: -170px;
+
+            border-radius: 50%;
+
+            border: 1px solid rgba(255,255,255,.06);
+        }
+
+        .balance-label {
+            position: relative;
+            z-index: 2;
+
+            color: #a7b0aa;
+
+            font-size: 11px;
+            font-weight: 600;
+
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+        }
+
+        .balance-row {
+            position: relative;
+            z-index: 2;
+
+            display: flex;
+            align-items: center;
+
+            gap: 15px;
+
+            margin-top: 19px;
+        }
+
+        .balance-value {
+            display: flex;
+            align-items: center;
+
+            font-family:
+                "Inter",
+                sans-serif;
+
+            font-size: clamp(40px, 4vw, 57px);
+
+            font-weight: 800;
+
+            letter-spacing: -2.2px;
+
+            line-height: 1;
+        }
+
+        .balance-value .currency {
+            margin-right: 5px;
+
+            font-size: .62em;
+
+            color: var(--primary);
+        }
+
+        .balance-eye-large {
+            width: 44px;
+            height: 44px;
+
+            flex-shrink: 0;
+
+            border-radius: 13px;
+
+            border: 1px solid rgba(255,255,255,.14);
+
+            background: rgba(255,255,255,.07);
+
+            color: white;
+
+            display: grid;
+            place-items: center;
+
+            transition: .2s;
+        }
+
+        .balance-eye-large:hover {
+            background: rgba(255,255,255,.15);
+            transform: translateY(-1px);
+        }
+
+        .balance-eye-large svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* =========================
+           ACCOUNT NUMBER
+        ========================= */
+
+        .account-number-box {
+            position: relative;
+            z-index: 2;
+
+            width: fit-content;
+            min-width: 300px;
+
+            margin-top: 28px;
+
+            padding: 14px 17px;
+
+            border-radius: 15px;
+
+            background: rgba(255,255,255,.09);
+
+            border: 1px solid rgba(255,255,255,.14);
+
+            backdrop-filter: blur(10px);
+        }
+
+        .account-number-label {
+            margin-bottom: 6px;
+
+            color: #aeb8b1;
+
+            font-size: 10px;
+            font-weight: 700;
+
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+        }
+
+        .account-number-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .account-number {
+            color: white;
+
+            font-size: 18px;
+            font-weight: 800;
+
+            letter-spacing: 2px;
+        }
+
+        .copy-account {
+            width: 30px;
+            height: 30px;
+
+            border: 0;
+            border-radius: 9px;
+
+            background: rgba(255,255,255,.09);
+
+            color: #d8e0da;
+
+            display: grid;
+            place-items: center;
+
+            transition: .2s;
+        }
+
+        .copy-account:hover {
+            background: var(--primary);
+            color: #102016;
+        }
+
+        .balance-decoration {
+            position: absolute;
+
+            right: 35px;
+            top: 35px;
+
+            width: 100px;
+            height: 100px;
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(133, 255, 175, .2),
+                    transparent 65%
+                );
+        }
+
+        /* =========================
+           QUICK ACTIONS
+        ========================= */
+
+        .section-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            margin: 30px 0 15px;
+        }
+
+        .section-heading h2 {
+            font-size: 17px;
+            letter-spacing: -.3px;
+        }
+
+        .section-heading span {
+            color: #8a938e;
+            font-size: 11px;
+        }
+
+        .quick-actions {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, minmax(0, 1fr));
+
+            gap: 13px;
+        }
+
+        .action-card {
+            padding: 18px;
+
+            border: 1px solid var(--border);
+            border-radius: 18px;
+
+            background: white;
+
+            text-align: left;
+
+            transition: .2s;
+        }
+
+        .action-card:hover {
+            transform: translateY(-2px);
+
+            border-color: #d4ded8;
+
+            box-shadow: var(--shadow);
+        }
+
+        .action-icon {
+            width: 40px;
+            height: 40px;
+
+            border-radius: 12px;
+
+            background: var(--primary-soft);
+
+            color: #1c7c46;
+
+            display: grid;
+            place-items: center;
+        }
+
+        .action-icon svg {
+            width: 19px;
+            height: 19px;
+        }
+
+        .action-title {
+            margin-top: 14px;
+
+            font-size: 13px;
+            font-weight: 750;
+        }
+
+        .action-description {
+            margin-top: 5px;
+
+            color: var(--muted);
+
+            font-size: 11px;
+            line-height: 1.45;
+        }
+
+        /* =========================
+           TRANSACTIONS
+        ========================= */
+
+        .transaction-card {
+            overflow: hidden;
+
+            border: 1px solid var(--border);
+            border-radius: 20px;
+
+            background: white;
+        }
+
+        .transaction {
+            display: flex;
+            align-items: center;
+
+            gap: 13px;
+
+            padding: 15px 17px;
+
+            border-bottom: 1px solid #f0f2f1;
+        }
+
+        .transaction:last-child {
+            border-bottom: 0;
+        }
+
+        .transaction-icon {
+            width: 39px;
+            height: 39px;
+
+            flex-shrink: 0;
+
+            border-radius: 12px;
+
+            display: grid;
+            place-items: center;
+        }
+
+        .transaction-icon.deposit {
+            background: #e7f9ee;
+            color: #25834b;
+        }
+
+        .transaction-icon.withdraw {
+            background: #fff0f0;
+            color: #cf5151;
+        }
+
+        .transaction-icon.transfer {
+            background: #eef1ff;
+            color: #6671c8;
+        }
+
+        .transaction-info {
+            min-width: 0;
+            flex: 1;
+        }
+
+        .transaction-name {
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .transaction-date {
+            margin-top: 4px;
+
+            color: #949c97;
+
+            font-size: 10px;
+        }
+
+        .transaction-amount {
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .transaction-amount.positive {
+            color: #238348;
+        }
+
+        .transaction-amount.negative {
+            color: #d55353;
+        }
+
+        /* =========================
+           FORMS
+        ========================= */
+
+        .form-card {
+            max-width: 650px;
+
+            padding: 26px;
+
+            border: 1px solid var(--border);
+            border-radius: 22px;
+
+            background: white;
+
+            box-shadow: var(--shadow);
+        }
+
+        .form-title {
+            font-size: 19px;
+            font-weight: 750;
+        }
+
+        .form-subtitle {
+            margin-top: 6px;
+
+            color: var(--muted);
+
+            font-size: 12px;
+        }
+
+        .form-group {
+            margin-top: 22px;
+        }
+
+        .form-label {
+            display: block;
+
+            margin-bottom: 8px;
+
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .input-wrap {
+            position: relative;
+        }
+
+        .input-prefix {
+            position: absolute;
+
+            left: 14px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            color: #7d8781;
+
+            font-weight: 700;
+        }
+
+        .form-input,
+        .form-select {
+            width: 100%;
+            min-width: 0;
+            max-width: 100%;
+            height: 48px;
+
+            padding: 0 38px 0 14px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+
+            border: 1px solid var(--border);
+            border-radius: 12px;
+
+            outline: none;
+
+            background: #fafbfa;
+
+            color: var(--text);
+
+            font-size: 13px;
+
+            transition: .2s;
+        }
+
+        .form-select option {
+            max-width: 100%;
+        }
+
+        .form-input,
+        .form-select {
+            box-sizing: border-box;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            border-color: var(--primary-dark);
+
+            box-shadow:
+                0 0 0 3px rgba(80, 210, 125, .12);
+        }
+
+        .amount-input {
+            padding-left: 34px;
+        }
+
+        .primary-button {
+            width: 100%;
+
+            height: 48px;
+
+            margin-top: 22px;
+
+            border: 0;
+            border-radius: 12px;
+
+            background: var(--primary);
+
+            color: #112018;
+
+            font-weight: 800;
+
+            transition: .2s;
+        }
+
+        .primary-button:hover {
+            filter: brightness(.96);
+            transform: translateY(-1px);
+        }
+
+        /* =========================
+           TRANSACTION PAGE
+        ========================= */
+
+        .filters {
+            display: flex;
+            gap: 10px;
+
+            margin-bottom: 16px;
+        }
+
+        .search-input {
+            flex: 1;
+        }
+
+        .filter-select {
+            width: 160px;
+        }
+
+        /* =========================
+           PROFILE
+        ========================= */
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+
+            margin-bottom: 25px;
+        }
+
+        .profile-avatar {
+            width: 70px;
+            height: 70px;
+
+            border-radius: 20px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    var(--primary),
+                    #b6f5cc
+                );
+
+            display: grid;
+            place-items: center;
+
+            color: #152019;
+
+            font-size: 23px;
+            font-weight: 800;
+        }
+
+        .profile-name {
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .profile-email {
+            margin-top: 4px;
+
+            color: var(--muted);
+
+            font-size: 12px;
+        }
+
+        /* =========================
+           PAYMENT DETAILS
+        ========================= */
+
+        .payment-details {
+            margin-top: 18px;
+            padding: 18px;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            background: #fafbfa;
+        }
+
+        .payment-details[hidden] {
+            display: none;
+        }
+
+        .payment-details-title {
+            font-size: 14px;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+
+        .payment-details-subtitle {
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .account-copy-row {
+            display: flex;
+            gap: 8px;
+            align-items: stretch;
+        }
+
+        .account-copy-row .form-input {
+            min-width: 0;
+            flex: 1;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        .copy-account-button {
+            flex: 0 0 auto;
+            min-width: 76px;
+            border: 1px solid var(--border);
+            border-radius: 11px;
+            background: white;
+            color: var(--text);
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .payment-details .form-group {
+            margin-top: 14px;
+        }
+
+        .payment-details .form-group:first-of-type {
+            margin-top: 0;
+        }
+
+        .form-step {
+            display: none;
+        }
+
+        .form-step.active {
+            display: block;
+        }
+
+        .step-note {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 500px) {
+            .account-copy-row {
+                flex-direction: column;
+            }
+
+            .copy-account-button {
+                height: 44px;
+            }
+        }
+
+
+        /* =========================
+           MODAL
+        ========================= */
+
+        .modal-overlay {
+            position: fixed;
+
+            inset: 0;
+
+            padding: 20px;
+
+            background: rgba(12, 17, 14, .48);
+
+            display: none;
+            align-items: center;
+            justify-content: center;
+
+            z-index: 300;
+
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            width: min(420px, 100%);
+
+            padding: 25px;
+
+            border-radius: 22px;
+
+            background: white;
+
+            box-shadow:
+                0 30px 90px rgba(0,0,0,.2);
+        }
+
+        .modal-title {
+            font-size: 19px;
+            font-weight: 800;
+        }
+
+        .modal-text {
+            margin-top: 8px;
+
+            color: var(--muted);
+
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+
+            margin-top: 22px;
+        }
+
+        .modal-button {
+            flex: 1;
+
+            height: 44px;
+
+            border-radius: 11px;
+
+            border: 1px solid var(--border);
+
+            background: white;
+
+            font-weight: 700;
+        }
+
+        .modal-button.confirm {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        /* =========================
+           TOAST
+        ========================= */
+
+        .toast {
+            position: fixed;
+
+            right: 25px;
+            bottom: 25px;
+
+            min-width: 260px;
+
+            padding: 14px 16px;
+
+            border-radius: 14px;
+
+            background: #151b17;
+
+            color: white;
+
+            font-size: 12px;
+            font-weight: 600;
+
+            box-shadow:
+                0 20px 50px rgba(0,0,0,.18);
+
+            transform: translateY(30px);
+
+            opacity: 0;
+            pointer-events: none;
+
+            transition: .3s;
+
+            z-index: 400;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* =========================
+           MOBILE OVERLAY
+        ========================= */
+
+        .sidebar-overlay {
+            position: fixed;
+
+            inset: 0;
+
+            background: rgba(0,0,0,.35);
+
+            display: none;
+
+            z-index: 90;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 1000px) {
+            .quick-actions {
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 760px) {
+            .form-card {
+                width: 100%;
+                min-width: 0;
+            }
+
+            .form-input,
+            .form-select {
+                max-width: 100%;
+            }
+
+            :root {
+                --sidebar-width: 250px;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform .25s ease;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .sidebar-overlay.show {
+                display: block;
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .mobile-menu {
+                display: grid;
+            }
+
+            .topbar {
+                padding: 0 18px;
+            }
+
+            .top-user-name {
+                display: none;
+            }
+
+            .content {
+                padding: 22px 17px;
+            }
+
+            .balance-card {
+                padding: 23px;
+            }
+
+            .balance-value {
+                font-size: clamp(34px, 10vw, 46px);
+            }
+
+            .balance-eye-large {
+                width: 40px;
+                height: 40px;
+            }
+
+            .account-number-box {
+                width: 100%;
+                min-width: 0;
+            }
+
+            .filters {
+                flex-direction: column;
+            }
+
+            .filter-select {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .quick-actions {
+                grid-template-columns: 1fr 1fr;
+                gap: 9px;
+            }
+
+            .action-card {
+                padding: 14px;
+            }
+
+            .action-title {
+                font-size: 12px;
+            }
+
+            .action-description {
+                font-size: 10px;
+            }
+
+            .balance-row {
+                gap: 10px;
+            }
+
+            .balance-value {
+                letter-spacing: -2px;
+            }
+
+            .topbar {
+                height: 68px;
+            }
+
+            .page-title {
+                font-size: 17px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SIDEBAR OVERLAY -->
+    <div
+        class="sidebar-overlay"
+        id="sidebarOverlay"
+        onclick="closeSidebar()">
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+
+        <div class="logo">
+            <div class="logo-mark">$</div>
+
+            <div class="logo-text">
+                NovaPay
+            </div>
+        </div>
+
+        <div class="nav-label">
+            Menu
+        </div>
+
+        <nav class="nav">
+
+            <button
+                class="nav-item active"
+                data-page="dashboard"
+                onclick="navigate('dashboard')">
+
+                <svg viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7" rx="1"/>
+                    <rect x="14" y="3" width="7" height="7" rx="1"/>
+                    <rect x="3" y="14" width="7" height="7" rx="1"/>
+                    <rect x="14" y="14" width="7" height="7" rx="1"/>
+                </svg>
+
+                Dashboard
+            </button>
+
+            <button
+                class="nav-item"
+                data-page="deposit"
+                onclick="navigate('deposit')">
+
+                <svg viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2">
+                    <path d="M12 3v12"/>
+                    <path d="m7 10 5 5 5-5"/>
+                    <path d="M5 21h14"/>
+                </svg>
+
+                Deposit
+            </button>
+
+            <button
+                class="nav-item"
+                data-page="withdraw"
+                onclick="navigate('withdraw')">
+
+                <svg viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2">
+                    <path d="M12 21V9"/>
+                    <path d="m7 14 5-5 5 5"/>
+                    <path d="M5 3h14"/>
+                </svg>
+
+                Withdraw
+            </button>
+
+            <button
+                class="nav-item"
+                data-page="transactions"
+                onclick="navigate('transactions')">
+
+                <svg viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2">
+                    <path d="M4 6h16"/>
+                    <path d="M4 12h16"/>
+                    <path d="M4 18h10"/>
+                </svg>
+
+                Transactions
+            </button>
+
+            <button
+                class="nav-item"
+                data-page="profile"
+                onclick="navigate('profile')">
+
+                <svg viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="8" r="4"/>
+                    <path d="M4 21c1.5-4 4.2-6 8-6s6.5 2 8 6"/>
+                </svg>
+
+                Profile
+            </button>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <div class="secure-card">
+
+                <div class="secure-title">
+
+                    <svg width="16" height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2">
+
+                        <rect x="4" y="10" width="16" height="11" rx="2"/>
+                        <path d="M8 10V7a4 4 0 0 1 8 0v3"/>
+                    </svg>
+
+                    Secure Wallet
+                </div>
+
+                <div class="secure-text">
+                    Your wallet information is protected
+                    with secure encryption.
+                </div>
+
+            </div>
+
+            <button
+                class="nav-item"
+                style="margin-top:12px;"
+                onclick="signOut()">
+
+                <svg viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2">
+                    <path d="M10 17l5-5-5-5"/>
+                    <path d="M15 12H3"/>
+                    <path d="M21 3v18"/>
+                </svg>
+
+                Sign out
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+    <main class="main">
+
+        <!-- TOPBAR -->
+        <header class="topbar">
+
+            <div style="display:flex;align-items:center;gap:12px;">
+
+                <button
+                    class="mobile-menu"
+                    onclick="openSidebar()">
+
+                    <svg width="20" height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2">
+
+                        <path d="M4 6h16"/>
+                        <path d="M4 12h16"/>
+                        <path d="M4 18h16"/>
+                    </svg>
+
+                </button>
+
+                <div
+                    class="page-title"
+                    id="pageTitle">
+                    Dashboard
+                </div>
+
+            </div>
+
+            <div class="top-user">
+
+                <div class="top-user-name">
+                    Alex Morgan
+                </div>
+
+                <div class="avatar">
+                    AM
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <div class="content">
+
+            <!-- =========================
+                 DASHBOARD
+            ========================== -->
+
+            <section
+                class="page active"
+                id="dashboard">
+
+                <div class="welcome">
+
+                    <h1>
+                        Welcome back, Alex
+                    </h1>
+
+                    <p>
+                        Here's what's happening with your wallet today.
+                    </p>
+
+                </div>
+
+
+                <!-- BALANCE -->
+
+                <div class="balance-card">
+
+                    <div class="balance-decoration"></div>
+
+                    <div class="balance-label">
+                        Available Balance
+                    </div>
+
+                    <div class="balance-row">
+
+                        <div
+                            class="balance-value"
+                            id="balanceDisplay">
+
+                            <span class="currency">
+                                $
+                            </span>
+
+                            2,485,750.00
+
+                        </div>
+
+                        <button
+                            class="balance-eye-large"
+                            id="balanceToggle"
+                            onclick="toggleBalance()"
+                            aria-label="Hide balance">
+
+                            <svg
+                                id="eyeIcon"
+                                width="20"
+                                height="20"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2">
+
+                                <path
+                                    d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/>
+
+                                <circle
+                                    cx="12"
+                                    cy="12"
+                                    r="3"/>
+
+                            </svg>
+
+                        </button>
+
+                    </div>
+
+
+                    <!-- ACCOUNT NUMBER -->
+
+                    <div class="account-number-box">
+
+                        <div class="account-number-label">
+                            User Account Number
+                        </div>
+
+                        <div class="account-number-row">
+
+                            <div
+                                class="account-number"
+                                id="accountNumber">
+
+                                0192 8473 6150
+
+                            </div>
+
+                            <button
+                                class="copy-account"
+                                onclick="copyAccount()"
+                                aria-label="Copy account number">
+
+                                <svg
+                                    width="15"
+                                    height="15"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2">
+
+                                    <rect
+                                        x="9"
+                                        y="9"
+                                        width="11"
+                                        height="11"
+                                        rx="2"/>
+
+                                    <path
+                                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+
+                                </svg>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- QUICK ACTIONS -->
+
+                <div class="section-heading">
+
+                    <h2>
+                        Quick actions
+                    </h2>
+
+                    <span>
+                        Manage your money
+                    </span>
+
+                </div>
+
+
+                <div class="quick-actions">
+
+                    <button
+                        class="action-card"
+                        onclick="navigate('deposit')">
+
+                        <div class="action-icon">
+
+                            <svg viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2">
+
+                                <path d="M12 5v14"/>
+                                <path d="M5 12h14"/>
+
+                            </svg>
+
+                        </div>
+
+                        <div class="action-title">
+                            Add money
+                        </div>
+
+                        <div class="action-description">
+                            Deposit funds into your wallet.
+                        </div>
+
+                    </button>
+
+
+                    <button
+                        class="action-card"
+                        onclick="navigate('withdraw')">
+
+                        <div class="action-icon">
+
+                            <svg viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2">
+
+                                <path d="M12 19V5"/>
+                                <path d="m5 12 7 7 7-7"/>
+
+                            </svg>
+
+                        </div>
+
+                        <div class="action-title">
+                            Withdraw
+                        </div>
+
+                        <div class="action-description">
+                            Move money from your wallet.
+                        </div>
+
+                    </button>
+
+
+                    <button
+                        class="action-card"
+                        onclick="navigate('transactions')">
+
+                        <div class="action-icon">
+
+                            <svg viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2">
+
+                                <path d="M4 6h16"/>
+                                <path d="M4 12h16"/>
+                                <path d="M4 18h10"/>
+
+                            </svg>
+
+                        </div>
+
+                        <div class="action-title">
+                            Transactions
+                        </div>
+
+                        <div class="action-description">
+                            View your complete activity.
+                        </div>
+
+                    </button>
+
+
+                    <button
+                        class="action-card"
+                        onclick="navigate('profile')">
+
+                        <div class="action-icon">
+
+                            <svg viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2">
+
+                                <circle cx="12" cy="8" r="4"/>
+                                <path d="M4 21c1.5-4 4.2-6 8-6s6.5 2 8 6"/>
+
+                            </svg>
+
+                        </div>
+
+                        <div class="action-title">
+                            Profile
+                        </div>
+
+                        <div class="action-description">
+                            Manage your personal details.
+                        </div>
+
+                    </button>
+
+                </div>
+
+
+                <!-- RECENT TRANSACTIONS -->
+
+                <div class="section-heading">
+
+                    <h2>
+                        Recent transactions
+                    </h2>
+
+                    <button
+                        onclick="navigate('transactions')"
+                        style="
+                            border:0;
+                            background:none;
+                            color:#43875e;
+                            font-size:11px;
+                            font-weight:700;
+                            cursor:pointer;
+                        ">
+
+                        View all
+
+                    </button>
+
+                </div>
+
+
+                <div
+                    class="transaction-card"
+                    id="recentTransactions">
+                </div>
+
+            </section>
+
+
+            <!-- =========================
+                 DEPOSIT
+            ========================== -->
+
+            <section
+                class="page"
+                id="deposit">
+
+                <div class="welcome">
+
+                    <h1>
+                        Deposit
+                    </h1>
+
+                    <p>
+                        Add funds to your NovaPay wallet.
+                    </p>
+
+                </div>
+
+
+                <div class="form-card">
+
+                    <div class="form-title">
+                        Add money
+                    </div>
+
+                    <div class="form-subtitle">
+                        Enter the amount you would like to deposit.
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label class="form-label">
+                            Amount
+                        </label>
+
+                        <div class="input-wrap">
+
+                            <span class="input-prefix">
+                                $
+                            </span>
+
+                            <input
+                                class="form-input amount-input"
+                                id="depositAmount"
+                                type="number"
+                                min="1"
+                                placeholder="0.00">
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label class="form-label">
+                            Deposit method
+                        </label>
+
+                        <select
+                            class="form-select"
+                            id="depositMethod"
+                            onchange="updateDepositDetails()">
+
+                            <option value="bank">
+                                Bank transfer
+                            </option>
+
+                            <option value="debit">
+                                Debit card
+                            </option>
+
+                            <option value="credit">
+                                Credit card
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div
+                        class="payment-details"
+                        id="depositBankDetails">
+
+                        <div class="payment-details-title">
+                            Transfer to your NovaPay account
+                        </div>
+
+                        <div class="payment-details-subtitle">
+                            Copy the NovaPay account number below, then select the bank you will transfer the money from.
+                        </div>
+
+                        <div class="form-group">
+
+                            <label class="form-label">
+                                NovaPay account number
+                            </label>
+
+                            <div class="account-copy-row">
+
+                                <input
+                                    class="form-input"
+                                    id="depositAccountNumber"
+                                    value="0192 8473 6150"
+                                    readonly>
+
+                                <button
+                                    type="button"
+                                    class="copy-account-button"
+                                    onclick="copyDepositAccount()">
+
+                                    Copy
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label class="form-label">
+                                Bank you are transferring from
+                            </label>
+
+                            <input
+                                class="form-input"
+                                id="depositBankName"
+                                placeholder="Enter your bank name">
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="payment-details"
+                        id="depositCardDetails"
+                        hidden>
+
+                        <div class="payment-details-title">
+                            Card details
+                        </div>
+
+                        <div class="payment-details-subtitle">
+                            Enter the card you want to use for this deposit.
+                        </div>
+
+                        <div class="form-group">
+
+                            <label class="form-label">
+                                Cardholder name
+                            </label>
+
+                            <input
+                                class="form-input"
+                                id="depositCardName"
+                                placeholder="Name on card">
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label class="form-label">
+                                Card number
+                            </label>
+
+                            <input
+                                class="form-input"
+                                id="depositCardNumber"
+                                inputmode="numeric"
+                                maxlength="19"
+                                placeholder="0000 0000 0000 0000">
+
+                        </div>
+
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+
+                            <div class="form-group">
+
+                                <label class="form-label">
+                                    Expiry
+                                </label>
+
+                                <input
+                                    class="form-input"
+                                    id="depositCardExpiry"
+                                    placeholder="MM/YY"
+                                    maxlength="5">
+
+                            </div>
+
+                            <div class="form-group">
+
+                                <label class="form-label">
+                                    CVV
+                                </label>
+
+                                <input
+                                    class="form-input"
+                                    id="depositCardCvv"
+                                    inputmode="numeric"
+                                    maxlength="4"
+                                    placeholder="CVV">
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        class="primary-button"
+                        onclick="submitDeposit()">
+
+                        Deposit money
+
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- =========================
+                 WITHDRAW
+            ========================== -->
+
+            <section
+                class="page"
+                id="withdraw">
+
+                <div class="welcome">
+
+                    <h1>
+                        Withdraw
+                    </h1>
+
+                    <p>
+                        Withdraw funds from your wallet.
+                    </p>
+
+                </div>
+
+
+                <div class="form-card">
+
+                    <div class="form-title">
+                        Withdraw money
+                    </div>
+
+                    <div class="form-subtitle">
+                        Enter the amount you want to withdraw.
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label class="form-label">
+                            Amount
+                        </label>
+
+                        <div class="input-wrap">
+
+                            <span class="input-prefix">
+                                $
+                            </span>
+
+                            <input
+                                class="form-input amount-input"
+                                id="withdrawAmount"
+                                type="number"
+                                min="1"
+                                placeholder="0.00">
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label class="form-label">
+                            Withdraw to
+                        </label>
+
+                        <select
+                            class="form-select"
+                            id="withdrawMethod"
+                            onchange="updateWithdrawDetails()">
+
+                            <option value="bank">
+                                Bank account
+                            </option>
+
+                            <option value="card">
+                                Debit card
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div
+                        class="payment-details"
+                        id="withdrawBankDetails">
+
+                        <div class="payment-details-title">
+                            Bank account details
+                        </div>
+
+                        <div class="payment-details-subtitle">
+                            Enter the bank account where you want the withdrawal sent.
+                        </div>
+
+                        <div class="form-group">
+
+                            <label class="form-label">
+                                Bank name
+                            </label>
+
+                            <input
+                                class="form-input"
+                                id="withdrawBankName"
+                                placeholder="Enter bank name">
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label class="form-label">
+                                Account holder name
+                            </label>
+
+                            <input
+                                class="form-input"
+                                id="withdrawBankAccountName"
+                                placeholder="Name on bank account">
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label class="form-label">
+                                Account number
+                            </label>
+
+                            <input
+                                class="form-input"
+                                id="withdrawBankAccountNumber"
+                                inputmode="numeric"
+                                placeholder="Enter account number">
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="payment-details"
+                        id="withdrawCardDetails"
+                        hidden>
+
+                        <div class="payment-details-title">
+                            Card details
+                        </div>
+
+                        <div class="payment-details-subtitle">
+                            Enter the debit card you want the withdrawal sent to.
+                        </div>
+
+                        <div class="form-group">
+
+                            <label class="form-label">
+                                Cardholder name
+                            </label>
+
+                            <input
+                                class="form-input"
+                                id="withdrawCardName"
+                                placeholder="Name on card">
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label class="form-label">
+                                Card number
+                            </label>
+
+                            <input
+                                class="form-input"
+                                id="withdrawCardNumber"
+                                inputmode="numeric"
+                                maxlength="19"
+                                placeholder="0000 0000 0000 0000">
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label class="form-label">
+                                Expiry
+                            </label>
+
+                            <input
+                                class="form-input"
+                                id="withdrawCardExpiry"
+                                placeholder="MM/YY"
+                                maxlength="5">
+
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        class="primary-button"
+                        onclick="submitWithdraw()">
+
+                        Withdraw money
+
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- =========================
+                 TRANSACTIONS
+            ========================== -->
+
+            <section
+                class="page"
+                id="transactions">
+
+                <div class="welcome">
+
+                    <h1>
+                        Transactions
+                    </h1>
+
+                    <p>
+                        View and search your wallet activity.
+                    </p>
+
+                </div>
+
+
+                <div class="filters">
+
+                    <input
+                        class="form-input search-input"
+                        id="transactionSearch"
+                        placeholder="Search transactions..."
+                        oninput="renderTransactions()">
+
+                    <select
+                        class="form-select filter-select"
+                        id="transactionFilter"
+                        onchange="renderTransactions()">
+
+                        <option value="all">
+                            All transactions
+                        </option>
+
+                        <option value="deposit">
+                            Deposits
+                        </option>
+
+                        <option value="withdraw">
+                            Withdrawals
+                        </option>
+
+                        <option value="transfer">
+                            Transfers
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div
+                    class="transaction-card"
+                    id="allTransactions">
+                </div>
+
+            </section>
+
+
+            <!-- =========================
+                 PROFILE
+            ========================== -->
+
+            <section
+                class="page"
+                id="profile">
+
+                <div class="welcome">
+
+                    <h1>
+                        Profile
+                    </h1>
+
+                    <p>
+                        Manage your account information.
+                    </p>
+
+                </div>
+
+
+                <div class="profile-header">
+
+                    <div class="profile-avatar">
+                        AM
+                    </div>
+
+                    <div>
+
+                        <div class="profile-name">
+                            Alex Morgan
+                        </div>
+
+                        <div class="profile-email">
+                            alex.morgan@example.com
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-card">
+
+                    <div class="form-title">
+                        Personal information
+                    </div>
+
+                    <div class="form-subtitle">
+                        Update your account details.
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label class="form-label">
+                            Full name
+                        </label>
+
+                        <input
+                            class="form-input"
+                            id="profileName"
+                            value="Alex Morgan">
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label class="form-label">
+                            Email address
+                        </label>
+
+                        <input
+                            class="form-input"
+                            id="profileEmail"
+                            type="email"
+                            value="alex.morgan@example.com">
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label class="form-label">
+                            Phone number
+                        </label>
+
+                        <input
+                            class="form-input"
+                            id="profilePhone"
+                            value="+1 555 284 7310">
+
+                    </div>
+
+
+                    <button
+                        class="primary-button"
+                        onclick="saveProfile()">
+
+                        Save changes
+
+                    </button>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+
+    <!-- =========================
+         CONFIRMATION MODAL
+    ========================== -->
+
+    <div
+        class="modal-overlay"
+        id="modalOverlay">
+
+        <div class="modal">
+
+            <div
+                class="modal-title"
+                id="modalTitle">
+                Confirm action
+            </div>
+
+            <div
+                class="modal-text"
+                id="modalText">
+                Are you sure?
+            </div>
+
+            <div class="modal-actions">
+
+                <button
+                    class="modal-button"
+                    onclick="closeModal()">
+
+                    Cancel
+
+                </button>
+
+                <button
+                    class="modal-button confirm"
+                    id="modalConfirm">
+
+                    Confirm
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- TOAST -->
+
+    <div
+        class="toast"
+        id="toast">
+    </div>
+
+
+    <script>
+
+        /* =========================
+           STATE
+        ========================== */
+
+        let balance = 2485750;
+
+        let balanceVisible = true;
+
+        let transactions = [
+
+            {
+                name: "Salary deposit",
+                type: "deposit",
+                amount: 5200,
+                date: "Today, 09:42 AM"
+            },
+
+            {
+                name: "Online purchase",
+                type: "withdraw",
+                amount: -185.40,
+                date: "Yesterday, 04:18 PM"
+            },
+
+            {
+                name: "Wallet transfer",
+                type: "transfer",
+                amount: -850,
+                date: "Sep 17, 2026"
+            },
+
+            {
+                name: "Bank deposit",
+                type: "deposit",
+                amount: 2500,
+                date: "Sep 15, 2026"
+            },
+
+            {
+                name: "Utility payment",
+                type: "withdraw",
+                amount: -320.75,
+                date: "Sep 13, 2026"
+            }
+
+        ];
+
+
+        /* =========================
+           FORMAT MONEY
+        ========================== */
+
+        function formatMoney(value) {
+
+            return new Intl.NumberFormat(
+                "en-US",
+                {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }
+            ).format(value);
+
+        }
+
+
+        /* =========================
+           NAVIGATION
+        ========================= */
+
+        function navigate(page) {
+
+            document.querySelectorAll(".page")
+                .forEach(section => {
+                    section.classList.remove("active");
+                });
+
+            const target =
+                document.getElementById(page);
+
+            if (target) {
+                target.classList.add("active");
+            }
+
+
+            document.querySelectorAll(".nav-item[data-page]")
+                .forEach(item => {
+
+                    item.classList.toggle(
+                        "active",
+                        item.dataset.page === page
+                    );
+
+                });
+
+
+            const titles = {
+
+                dashboard: "Dashboard",
+                deposit: "Deposit",
+                withdraw: "Withdraw",
+                transactions: "Transactions",
+                profile: "Profile"
+
+            };
+
+            document.getElementById("pageTitle").textContent =
+                titles[page] || "Dashboard";
+
+
+            closeSidebar();
+
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+
+
+            if (page === "transactions") {
+                renderTransactions();
+            }
+
+        }
+
+
+        /* =========================
+           BALANCE TOGGLE
+        ========================== */
+
+        function toggleBalance() {
+
+            balanceVisible = !balanceVisible;
+
+            const display =
+                document.getElementById("balanceDisplay");
+
+            const button =
+                document.getElementById("balanceToggle");
+
+            const icon =
+                document.getElementById("eyeIcon");
+
+
+            if (balanceVisible) {
+
+                display.innerHTML = `
+                    <span class="currency">$</span>
+                    ${formatMoney(balance)}
+                `;
+
+                button.setAttribute(
+                    "aria-label",
+                    "Hide balance"
+                );
+
+                icon.innerHTML = `
+                    <path
+                        d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/>
+
+                    <circle
+                        cx="12"
+                        cy="12"
+                        r="3"/>
+                `;
+
+            } else {
+
+                display.innerHTML = `
+                    <span class="currency">$</span>
+                    ••••••••
+                `;
+
+                button.setAttribute(
+                    "aria-label",
+                    "Show balance"
+                );
+
+                icon.innerHTML = `
+                    <path
+                        d="M17.94 17.94A10.94 10.94 0 0 1 12 19C5 19 1 12 1 12a21.77 21.77 0 0 1 5.06-6.94"/>
+
+                    <path
+                        d="M1 1l22 22"/>
+
+                    <path
+                        d="M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 7 11 7a21.77 21.77 0 0 1-3.17 4.34"/>
+
+                    <path
+                        d="M14.12 14.12A3 3 0 0 1 9.88 9.88"/>
+                `;
+
+            }
+
+        }
+
+
+        /* =========================
+           COPY ACCOUNT
+        ========================== */
+
+        function copyAccount() {
+
+            const account =
+                document
+                .getElementById("accountNumber")
+                .textContent
+                .trim();
+
+            navigator.clipboard.writeText(account)
+                .then(() => {
+
+                    showToast(
+                        "Account number copied."
+                    );
+
+                })
+                .catch(() => {
+
+                    showToast(
+                        "Unable to copy account number."
+                    );
+
+                });
+
+        }
+
+
+        /* =========================
+           TRANSACTIONS
+        ========================== */
+
+        function transactionIcon(type) {
+
+            if (type === "deposit") {
+
+                return `
+                    <svg width="17" height="17"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2">
+
+                        <path d="M12 19V5"/>
+                        <path d="m5 12 7 7 7-7"/>
+
+                    </svg>
+                `;
+
+            }
+
+            if (type === "withdraw") {
+
+                return `
+                    <svg width="17" height="17"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2">
+
+                        <path d="M12 5v14"/>
+                        <path d="m5 12 7-7 7 7"/>
+
+                    </svg>
+                `;
+
+            }
+
+            return `
+                <svg width="17" height="17"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2">
+
+                    <path d="M5 12h14"/>
+                    <path d="m13 6 6 6-6 6"/>
+
+                </svg>
+            `;
+
+        }
+
+
+        function transactionHTML(transaction) {
+
+            const positive =
+                transaction.amount > 0;
+
+            const amount =
+                `${positive ? "+" : "-"}$${formatMoney(
+                    Math.abs(transaction.amount)
+                )}`;
+
+
+            return `
+                <div class="transaction">
+
+                    <div class="transaction-icon ${transaction.type}">
+                        ${transactionIcon(transaction.type)}
+                    </div>
+
+                    <div class="transaction-info">
+
+                        <div class="transaction-name">
+                            ${transaction.name}
+                        </div>
+
+                        <div class="transaction-date">
+                            ${transaction.date}
+                        </div>
+
+                    </div>
+
+                    <div class="transaction-amount ${
+                        positive
+                            ? "positive"
+                            : "negative"
+                    }">
+
+                        ${amount}
+
+                    </div>
+
+                </div>
+            `;
+
+        }
+
+
+        function renderTransactions() {
+
+            const recent =
+                document.getElementById(
+                    "recentTransactions"
+                );
+
+            if (recent) {
+
+                recent.innerHTML =
+                    transactions
+                    .slice(0, 4)
+                    .map(transactionHTML)
+                    .join("");
+
+            }
+
+
+            const container =
+                document.getElementById(
+                    "allTransactions"
+                );
+
+            if (!container) {
+                return;
+            }
+
+
+            const search =
+                (
+                    document
+                    .getElementById(
+                        "transactionSearch"
+                    )?.value || ""
+                )
+                .toLowerCase();
+
+
+            const filter =
+                document
+                .getElementById(
+                    "transactionFilter"
+                )?.value || "all";
+
+
+            const filtered =
+                transactions.filter(item => {
+
+                    const matchesSearch =
+                        item.name
+                        .toLowerCase()
+                        .includes(search);
+
+                    const matchesFilter =
+                        filter === "all" ||
+                        item.type === filter;
+
+                    return (
+                        matchesSearch &&
+                        matchesFilter
+                    );
+
+                });
+
+
+            if (!filtered.length) {
+
+                container.innerHTML = `
+                    <div style="
+                        padding:35px;
+                        text-align:center;
+                        color:#8a938e;
+                        font-size:12px;
+                    ">
+                        No transactions found.
+                    </div>
+                `;
+
+                return;
+            }
+
+
+            container.innerHTML =
+                filtered
+                .map(transactionHTML)
+                .join("");
+
+        }
+
+
+        /* =========================
+           DEPOSIT
+        ========================== */
+
+        function updateDepositDetails() {
+
+            const method =
+                document.getElementById("depositMethod").value;
+
+            const bankDetails =
+                document.getElementById("depositBankDetails");
+
+            const cardDetails =
+                document.getElementById("depositCardDetails");
+
+            const isBank = method === "bank";
+
+            bankDetails.hidden = !isBank;
+            cardDetails.hidden = isBank;
+
+        }
+
+
+        function copyDepositAccount() {
+
+            const account =
+                document.getElementById("depositAccountNumber").value;
+
+            if (navigator.clipboard) {
+
+                navigator.clipboard.writeText(account).then(() => {
+
+                    showToast("Account number copied.");
+
+                }).catch(() => {
+
+                    showToast("Copy the account number manually.");
+
+                });
+
+            } else {
+
+                showToast("Copy the account number manually.");
+
+            }
+
+        }
+
+
+        function updateWithdrawDetails() {
+
+            const method =
+                document.getElementById("withdrawMethod").value;
+
+            const bankDetails =
+                document.getElementById("withdrawBankDetails");
+
+            const cardDetails =
+                document.getElementById("withdrawCardDetails");
+
+            const isBank = method === "bank";
+
+            bankDetails.hidden = !isBank;
+            cardDetails.hidden = isBank;
+
+        }
+
+
+        /* =========================
+           DEPOSIT
+        ========================== */
+
+        function submitDeposit() {
+
+            const input =
+                document.getElementById("depositAmount");
+
+            const amount =
+                Number(input.value);
+
+            const method =
+                document.getElementById("depositMethod").value;
+
+
+            if (!amount || amount <= 0) {
+
+                showToast(
+                    "Enter a valid deposit amount."
+                );
+
+                return;
+            }
+
+
+            if (method === "bank") {
+
+                const bank =
+                    document.getElementById("depositBankName").value.trim();
+
+                if (!bank) {
+
+                    showToast(
+                        "Enter the bank you are transferring from."
+                    );
+
+                    return;
+                }
+
+            } else {
+
+                const cardName =
+                    document.getElementById("depositCardName").value.trim();
+
+                const cardNumber =
+                    document.getElementById("depositCardNumber").value.trim();
+
+                const expiry =
+                    document.getElementById("depositCardExpiry").value.trim();
+
+                const cvv =
+                    document.getElementById("depositCardCvv").value.trim();
+
+                if (!cardName || !cardNumber || !expiry || !cvv) {
+
+                    showToast(
+                        "Complete all card details before continuing."
+                    );
+
+                    return;
+                }
+
+            }
+
+
+            openConfirmModal(
+                "Confirm deposit",
+                `Deposit $${formatMoney(amount)} into your wallet?`,
+                () => {
+
+                    balance += amount;
+
+                    transactions.unshift({
+
+                        name: method === "bank"
+                            ? "Bank transfer deposit"
+                            : "Card deposit",
+
+                        type: "deposit",
+                        amount: amount,
+                        date: "Just now"
+
+                    });
+
+
+                    input.value = "";
+
+                    updateBalanceDisplay();
+
+                    renderTransactions();
+
+                    showToast(
+                        `$${formatMoney(amount)} deposited successfully.`
+                    );
+
+                }
+            );
+
+        }
+
+
+        /* =========================
+           WITHDRAW
+        ========================== */
+
+        function submitWithdraw() {
+
+            const input =
+                document.getElementById("withdrawAmount");
+
+            const amount =
+                Number(input.value);
+
+            const method =
+                document.getElementById("withdrawMethod").value;
+
+
+            if (!amount || amount <= 0) {
+
+                showToast(
+                    "Enter a valid withdrawal amount."
+                );
+
+                return;
+            }
+
+
+            if (amount > balance) {
+
+                showToast(
+                    "Insufficient wallet balance."
+                );
+
+                return;
+            }
+
+
+            if (method === "bank") {
+
+                const bank =
+                    document.getElementById("withdrawBankName").value.trim();
+
+                const accountName =
+                    document.getElementById("withdrawBankAccountName").value.trim();
+
+                const accountNumber =
+                    document.getElementById("withdrawBankAccountNumber").value.trim();
+
+                if (!bank || !accountName || !accountNumber) {
+
+                    showToast(
+                        "Complete the bank account details before continuing."
+                    );
+
+                    return;
+                }
+
+            } else {
+
+                const cardName =
+                    document.getElementById("withdrawCardName").value.trim();
+
+                const cardNumber =
+                    document.getElementById("withdrawCardNumber").value.trim();
+
+                const expiry =
+                    document.getElementById("withdrawCardExpiry").value.trim();
+
+                if (!cardName || !cardNumber || !expiry) {
+
+                    showToast(
+                        "Complete the card details before continuing."
+                    );
+
+                    return;
+                }
+
+            }
+
+
+            openConfirmModal(
+                "Confirm withdrawal",
+                `Withdraw $${formatMoney(amount)} to your selected ${method === "bank" ? "bank account" : "debit card"}?`,
+                () => {
+
+                    balance -= amount;
+
+                    transactions.unshift({
+
+                        name: method === "bank"
+                            ? "Bank account withdrawal"
+                            : "Debit card withdrawal",
+
+                        type: "withdraw",
+                        amount: -amount,
+                        date: "Just now"
+
+                    });
+
+
+                    input.value = "";
+
+                    updateBalanceDisplay();
+
+                    renderTransactions();
+
+                    showToast(
+                        `$${formatMoney(amount)} withdrawn successfully.`
+                    );
+
+                }
+            );
+
+        }
+
+
+        /* =========================
+           UPDATE BALANCE
+        ========================== */
+
+        function updateBalanceDisplay() {
+
+            if (!balanceVisible) {
+                return;
+            }
+
+
+            document.getElementById(
+                "balanceDisplay"
+            ).innerHTML = `
+
+                <span class="currency">
+                    $
+                </span>
+
+                ${formatMoney(balance)}
+
+            `;
+
+        }
+
+
+        /* =========================
+           PROFILE
+        ========================== */
+
+        function saveProfile() {
+
+            const name =
+                document
+                .getElementById(
+                    "profileName"
+                )
+                .value
+                .trim();
+
+
+            const email =
+                document
+                .getElementById(
+                    "profileEmail"
+                )
+                .value
+                .trim();
+
+
+            if (!name || !email) {
+
+                showToast(
+                    "Please complete your profile information."
+                );
+
+                return;
+            }
+
+
+            document.querySelector(
+                ".top-user-name"
+            ).textContent = name;
+
+
+            document.querySelector(
+                ".profile-name"
+            ).textContent = name;
+
+
+            document.querySelector(
+                ".profile-email"
+            ).textContent = email;
+
+
+            const initials =
+                name
+                .split(" ")
+                .map(word => word[0])
+                .join("")
+                .slice(0, 2)
+                .toUpperCase();
+
+
+            document.querySelectorAll(
+                ".avatar, .profile-avatar"
+            )
+            .forEach(element => {
+                element.textContent = initials;
+            });
+
+
+            showToast(
+                "Profile updated successfully."
+            );
+
+        }
+
+
+        /* =========================
+           SIDEBAR
+        ========================== */
+
+        function openSidebar() {
+
+            document
+                .getElementById("sidebar")
+                .classList.add("open");
+
+            document
+                .getElementById("sidebarOverlay")
+                .classList.add("show");
+
+        }
+
+
+        function closeSidebar() {
+
+            document
+                .getElementById("sidebar")
+                .classList.remove("open");
+
+            document
+                .getElementById("sidebarOverlay")
+                .classList.remove("show");
+
+        }
+
+
+        /* =========================
+           MODAL
+        ========================== */
+
+        let modalAction = null;
+
+
+        function openConfirmModal(
+            title,
+            text,
+            action
+        ) {
+
+            document
+                .getElementById("modalTitle")
+                .textContent = title;
+
+
+            document
+                .getElementById("modalText")
+                .textContent = text;
+
+
+            modalAction = action;
+
+
+            document
+                .getElementById("modalOverlay")
+                .classList.add("show");
+
+
+            document
+                .getElementById("modalConfirm")
+                .onclick = () => {
+
+                    if (modalAction) {
+                        modalAction();
+                    }
+
+                    closeModal();
+
+                };
+
+        }
+
+
+        function closeModal() {
+
+            document
+                .getElementById("modalOverlay")
+                .classList.remove("show");
+
+            modalAction = null;
+
+        }
+
+
+        /* =========================
+           SIGN OUT
+        ========================== */
+
+        function signOut() {
+
+            openConfirmModal(
+                "Sign out",
+                "Are you sure you want to sign out of your wallet?",
+                () => {
+
+                    showToast(
+                        "You have been signed out."
+                    );
+
+                }
+            );
+
+        }
+
+
+        /* =========================
+           TOAST
+        ========================== */
+
+        let toastTimer;
+
+
+        function showToast(message) {
+
+            const toast =
+                document.getElementById("toast");
+
+
+            toast.textContent = message;
+
+            toast.classList.add("show");
+
+
+            clearTimeout(toastTimer);
+
+
+            toastTimer =
+                setTimeout(() => {
+
+                    toast.classList.remove(
+                        "show"
+                    );
+
+                }, 2800);
+
+        }
+
+
+        /* =========================
+           INITIALIZE
+        ========================== */
+
+        renderTransactions();
+        updateDepositDetails();
+        updateWithdrawDetails();
+
+    </script>
+
+</body>
+</html>
